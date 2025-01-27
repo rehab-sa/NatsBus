@@ -4,7 +4,7 @@ using NATS.Client.JetStream;
 
 namespace NatsBus;
 
-internal sealed class Balancer(IOptions<Options> options)
+internal sealed class LoadBalancer(IOptions<Options> options)
 {
   private INatsConnection[]? _connections = null;
   private INatsJSContext[]? _jsContexts = null;
@@ -29,9 +29,11 @@ internal sealed class Balancer(IOptions<Options> options)
       ).GetConnections(),
     ];
 
-    NatsJSContextFactory _jsContextFactory = new();
+    var jsContextFactory = new NatsJSContextFactory();
 
-    _jsContexts = [.. _connections.Select(_jsContextFactory.CreateContext)];
+    _jsContexts = [.. _connections.Select(jsContextFactory.CreateContext)];
+
+    // TODO Initialize outgoing and scheduling streams
 
     _jsConsumers = await Task.WhenAll(
         options.Value.IncomingStreams.SelectMany(stream =>

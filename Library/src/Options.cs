@@ -11,7 +11,7 @@ public record Options(
   ImmutableArray<Stream> OutgoingStreams,
   SchedulingStream SchedulingStream,
   //
-  ImmutableArray<Handler> MessageHandlers,
+  ImmutableArray<MessageHandler> MessageHandlers,
   Func<Type, string> GetSubjectFromType,
   Func<string, Type> GetTypeFromSubject,
   //
@@ -23,4 +23,4 @@ public record struct Stream(string Name, ImmutableArray<string> Subjects);
 
 public record struct SchedulingStream(string Name, string SubjectsPrefix);
 
-public record struct Handler(Type MessageType, MethodInfo HandlerMethod);
+public record struct MessageHandler(Type MessageType, MethodInfo HandlerMethod);
